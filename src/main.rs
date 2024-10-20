@@ -8,22 +8,25 @@ fn main() {
         .set_language(&tree_sitter_dapper::LANGUAGE.into())
         .expect("Error loading grammar");
 
-    let source_code = "type Whee string";
+    let source_code = "type Whee string\ntype Frob map{Foo:Foo}";
     let mut tree = parser.parse(source_code, None).unwrap();
     let root_node = tree.root_node();
     println!("wowsa: {}", root_node);
 
-    myprint(&source_code, &mut root_node.walk());
+    myprint(&source_code, &mut root_node.walk(), 0);
 }
 
-fn myprint(doc: &impl AsRef<[u8]>, tc: &mut TreeCursor) {
+fn myprint(doc: &impl AsRef<[u8]>, tc: &mut TreeCursor, depth: usize) {
     let n = tc.node();
-    println!("{}", n.kind());
+    let indent = "\t".repeat(depth);
+    print!("{}{}", indent, n.kind());
 
     // TODO: some kind of condition like finding labelled nodes would be good here.  or leaf nodes?
     // or just print an elided-middle fixed size and do so unconditionally.  unconditional can be good.
     if n.is_named() {
-        println!("  val: {:?}", n.utf8_text(doc.as_ref()).expect("utf8"))
+        println!(" -- val: {:?}", n.utf8_text(doc.as_ref()).expect("utf8"))
+    } else {
+        println!()
     }
 
     // TODO: print more things, like any field names.
@@ -34,8 +37,8 @@ fn myprint(doc: &impl AsRef<[u8]>, tc: &mut TreeCursor) {
     if !tc.goto_first_child() {
         return;
     }
-    myprint(doc, tc);
+    myprint(doc, tc, depth + 1);
     while tc.goto_next_sibling() {
-        myprint(doc, tc)
+        myprint(doc, tc, depth + 1)
     }
 }
