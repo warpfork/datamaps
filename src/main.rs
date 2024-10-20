@@ -1,3 +1,4 @@
+use std::io;
 use tree_sitter::{InputEdit, Language, Parser, Point, TreeCursor};
 
 fn main() {
@@ -13,33 +14,32 @@ fn main() {
     let root_node = tree.root_node();
     println!("wowsa: {}", root_node);
 
-    myprint(&source_code, &mut root_node.walk(), 0);
+    myprint(&mut io::stdout(), &source_code, &mut root_node.walk(), 0);
 }
 
-fn myprint(doc: &impl AsRef<[u8]>, tc: &mut TreeCursor, depth: usize) {
+fn myprint(out: &mut impl io::Write, doc: &impl AsRef<[u8]>, tc: &mut TreeCursor, depth: usize) {
     let n = tc.node();
-    let indent = "\t".repeat(depth);
-    print!("{}{}", indent, n.kind());
 
-    // TODO: some kind of condition like finding labelled nodes would be good here.  or leaf nodes?
-    // or just print an elided-middle fixed size and do so unconditionally.  unconditional can be good.
-    if n.is_named() {
-        println!(" -- val: {:?}", n.utf8_text(doc.as_ref()).expect("utf8"))
+    let is_field = tc.field_name().is_some();
+    if n.is_named() || is_field {
+        write!(out, "{}{}", "\t".repeat(depth), n.kind()).expect("output");
+        if is_field {
+            write!(out, " -- field: {}", tc.field_name().unwrap()).expect("output");
+        }
+        // TODO: this val body dump should probably print an elided-middle fixed size if over some threshhold.
+        writeln!(out, " -- val: {}", n.utf8_text(doc.as_ref()).expect("utf8")).expect("output");
     } else {
-        println!()
+        // You can print unnamed nodes too, sure -- but you'll get every little literal token.  Probably unwanted.
+        // writeln!(out, "{}{}", indent, n.kind());
     }
-
-    // TODO: print more things, like any field names.
-    // It seems really odd to me that you can't get a field name except by `n.field_name_for_child(child_index)` on the *parent*.
-    // Ah.  Do it on the cursor.  Ok lol.
 
     // Walk children.
     if !tc.goto_first_child() {
         return;
     }
-    myprint(doc, tc, depth + 1);
+    myprint(out, doc, tc, depth + 1);
     while tc.goto_next_sibling() {
-        myprint(doc, tc, depth + 1)
+        myprint(out, doc, tc, depth + 1)
     }
     tc.goto_parent();
 }
