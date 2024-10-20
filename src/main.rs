@@ -41,4 +41,5 @@ fn myprint(doc: &impl AsRef<[u8]>, tc: &mut TreeCursor, depth: usize) {
     while tc.goto_next_sibling() {
         myprint(doc, tc, depth + 1)
     }
+    tc.goto_parent();
 }
