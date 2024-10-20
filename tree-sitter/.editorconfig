@@ -1,0 +1,23 @@
+root = true
+
+[*]
+charset = utf-8
+
+[*.{yml,gyp}]
+indent_style = space
+indent_size = 2
+
+[*.js,json,toml,c,cc,h,rs,py,pyi,go]
+indent_style = tab
+indent_size = 4
+
+[*.scm]
+indent_style = space
+indent_size = 2
+
+[Makefile]
+indent_style = tab
+indent_size = 8
+
+[parser.c]
+indent_size = 2

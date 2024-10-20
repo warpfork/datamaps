@@ -35,3 +35,7 @@ License
 -------
 
 MIT or Apache2, at your convenience.
+
+In some places, I've left the license field mechanically declared as MIT,
+because I've had mixed results with MIT-OR-APACHE2 actually being understood by tooling in the wild.
+Nonetheless, consider this prose authoritative: you may choose either.

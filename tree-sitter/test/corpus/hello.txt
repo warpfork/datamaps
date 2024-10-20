@@ -1,0 +1,24 @@
+===============
+just the basics
+===============
+
+type Foo string
+
+type Frob map{Foo:Foo}
+
+---
+
+(source_file
+
+  (type_declaration
+    (type_identifier)
+    (type_defn_string))
+
+  (type_declaration
+    (type_identifier)
+    (type_defn_map
+      (type_clause_map
+        (type_identifier)
+        (type_or_reference
+          (type_identifier)))))
+)
