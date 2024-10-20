@@ -5,10 +5,10 @@ fn main() {
 
     let mut parser = Parser::new();
     parser
-        .set_language(&tree_sitter_rust::language())
-        .expect("Error loading Rust grammar");
+        .set_language(&tree_sitter_dapper::LANGUAGE.into())
+        .expect("Error loading grammar");
 
-    let source_code = "fn test() {}";
+    let source_code = "type Whee string";
     let mut tree = parser.parse(source_code, None).unwrap();
     let root_node = tree.root_node();
     println!("wowsa: {}", root_node)

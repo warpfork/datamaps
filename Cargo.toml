@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 tree-sitter = "*"
-tree-sitter-rust = "0.21"
+tree-sitter-dapper = { path = "tree-sitter" }
 
 [build-dependencies]
 cc = "*"
