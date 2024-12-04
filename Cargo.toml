@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 tree-sitter = "*"
 tree-sitter-dapper = { path = "tree-sitter" }
+indexmap = "*"
 
 [build-dependencies]
 cc = "*"

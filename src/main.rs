@@ -1,6 +1,8 @@
 use std::io;
 use tree_sitter::{InputEdit, Language, Parser, Point, TreeCursor};
 
+mod defns;
+
 fn main() {
     println!("Hello, world!");
 
