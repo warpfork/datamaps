@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tree-sitter = "*"
+tree-sitter = { version = "*", features = ["wasm"] }
 tree-sitter-dapper = { path = "tree-sitter" }
 indexmap = "*"
 
