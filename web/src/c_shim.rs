@@ -1,6 +1,6 @@
 use std::{
     alloc::{self, Layout},
-    ffi::{c_int, c_void},
+    ffi::{c_char, c_int, c_void},
     mem::align_of,
     ptr,
 };
@@ -169,11 +169,18 @@ pub unsafe extern "C" fn isprint(c: c_int) -> bool {
 
 /* --------------------------------- stdio.h -------------------------------- */
 
-// Cannot even offer this stub: C-variadic functions are unstable.
-// #[no_mangle]
-// pub unsafe extern "C" fn fprintf(_file: *mut c_void, _format: *const c_void, _args: ...) -> c_int {
-//     panic!("fprintf is not supported");
-// }
+// This stub is WRONG in signature...
+// but still fills in the space enough that it stops
+// the compilation to wasm from generating unsatisfied junk
+// of the form `(import "env" "fprintf" (func $env.fprintf (type $t1)))`.
+#[no_mangle]
+pub unsafe extern "C" fn fprintf(
+    _file: *mut c_void,
+    _format: *const c_void,
+    // _args: ...
+) -> c_int {
+    panic!("fprintf is not supported");
+}
 
 #[no_mangle]
 pub unsafe extern "C" fn fputs(_s: *const c_void, _file: *mut c_void) -> c_int {
@@ -205,13 +212,16 @@ pub unsafe extern "C" fn fwrite(
     panic!("fwrite is not supported");
 }
 
-// Cannot even offer this stub: C-variadic functions are unstable.
-// #[no_mangle]
-// pub unsafe extern "C" fn vsnprintf(
-//     _buf: *mut c_char,
-//     _size: usize,
-//     _format: *const c_char,
-//     _args: ...
-// ) -> c_int {
-//     panic!("vsnprintf is not supported");
-// }
+// This stub is WRONG in signature...
+// but still fills in the space enough that it stops
+// the compilation to wasm from generating unsatisfied junk
+// of the form `(import "env" "fprintf" (func $env.fprintf (type $t1)))`.
+#[no_mangle]
+pub unsafe extern "C" fn vsnprintf(
+    _buf: *mut c_char,
+    _size: usize,
+    _format: *const c_char,
+    // _args: ...
+) -> c_int {
+    panic!("vsnprintf is not supported");
+}
