@@ -22,28 +22,18 @@ pub fn main() {
 pub fn dapper_hey() {}
 
 pub fn treedemo() -> String {
-    Result::<(), ()>::Ok(()).expect("what");
-
     let mut parser = Parser::new();
-    // parser
-    //     .set_language(&tree_sitter_dapper::LANGUAGE.into())
-    //     .expect("Error loading grammar");
-    // well, it's not the expect.
-    // is it something about tree-sitter-dapper's config?
-    // nope, it's as soon as we refer to Parser at all.
-    // aka, the first time an ffi to C Actually Happens.  great.
-    // it doesn't look like the c on the bottom is doing anything with the environment.  it's just mem init stuff.
-    // so okay, something's turbo fucked here.
+    parser
+        .set_language(&tree_sitter_dapper::LANGUAGE.into())
+        .expect("Error loading grammar");
 
-    "Wot".to_owned()
+    let source_code = "type Whee string\ntype Frob map{Foo:Foo}";
+    let tree = parser.parse(source_code, None).unwrap();
+    let root_node = tree.root_node();
 
-    // let source_code = "type Whee string\ntype Frob map{Foo:Foo}";
-    // let tree = parser.parse(source_code, None).unwrap();
-    // let root_node = tree.root_node();
-
-    // let mut buf = Vec::new();
-    // myprint(&mut buf, &source_code, &mut root_node.walk(), 0);
-    // String::from_utf8(buf.into()).expect("shhh")
+    let mut buf = Vec::new();
+    myprint(&mut buf, &source_code, &mut root_node.walk(), 0);
+    String::from_utf8(buf.into()).expect("shhh")
 }
 
 pub fn myprint(
