@@ -109,7 +109,10 @@ pub unsafe extern "C" fn memmove(
 #[no_mangle]
 pub unsafe extern "C" fn memset(s: *mut c_void, c: i32, n: usize) -> *mut c_void {
     let slice = std::slice::from_raw_parts_mut(s as *mut u8, n);
-    slice.fill(c as u8);
+    //slice.fill(c as u8); // this?  this creates infinite recursion?  really?
+    for item in slice.iter_mut() {
+        *item = c as u8;
+    }
     s
 }
 
