@@ -92,7 +92,12 @@ unsafe fn store_layout(buf: *mut u8, layout: Layout, offset_to_data: usize) -> *
 
 #[no_mangle]
 pub unsafe extern "C" fn memcpy(dest: *mut c_void, src: *const c_void, size: usize) -> *mut c_void {
-    std::ptr::copy_nonoverlapping(src, dest, size);
+    let s1 = std::slice::from_raw_parts_mut(dest as *mut u8, size);
+    let s2 = std::slice::from_raw_parts(src as *const u8, size);
+
+    for (a, b) in s1.iter_mut().zip(s2.iter()) {
+        *a = *b;
+    }
     dest
 }
 
