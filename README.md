@@ -31,6 +31,43 @@ Expect development to prioritize things that are on the path to protocol design 
 (Codecs are a SMOP.  An important one, but a relatively well-known space.  We can do those later without a serious risk of problematic unanticipated design feedback cycle.)
 
 
+Building
+--------
+
+This project uses a LOT of tooling from various sources.
+The setup may be nontrivial.
+
+### for tree-sitter
+
+There's a tree-sitter CLI tool; you'll need that to compile the grammar
+and generate the parser (which comes out as a C file).
+
+And to use that parser, you'll probably need `clang` on your path,
+since it's a C file we're talking about.
+
+### for the wasm and web stuff
+
+For this, you'll need a **rust nightly**.
+(This is because we need the `-Zwasm-c-abi=spec` flag;
+without it, wasm'ify'd rust can't call wasm'ify'd C correctly.
+To the best of my knowledge, there's simply no way to address this
+aside from going to a nightly rust.)
+
+And you'll need the wasm-pack tool.  That's fairly easy to get:
+
+```
+cargo install wasm-pack
+```
+
+And you'll need your rust install to have the materials for wasm targets.
+The `wasm-pack` tool will either get that for you automatically (if you used `rustup`),
+or offer you instructions to follow if you need to do it manually.
+
+And you'll also still need clang.
+And probably a fairly recent version: it needs to have wasm32 support,
+and needs to be in reasonable alignment to what rust's wasm stuff is expecting.
+
+
 License
 -------
 
